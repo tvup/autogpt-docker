@@ -1,8 +1,11 @@
 version: "3.7"
 services:
   app:
+    build:
+      context: ./docker/autogpt
+      dockerfile: Dockerfile
+    image: tvup/autogpt-gotty
     container_name: autogpt-gotty
-    image: cdukes/autogpt-gotty:latest
     hostname: autogpt
     restart: on-failure
     init: true
@@ -10,7 +13,6 @@ services:
     tty: true
     networks:
       - autogpt
-    user: "${UID}:${GID}"
     volumes:
       - ${PWD}/workspace/:/app/auto_gpt_workspace/
       - ${PWD}/logs/:/logs/
@@ -27,7 +29,7 @@ services:
         target: /app/auto-gpt.json
         read_only: false
     depends_on:
-      - cache
+      - redis-stack-server
     environment:
       - PINECONE_API_KEY=${PINECONE_API_KEY}
       - PINECONE_ENV=${PINECONE_ENV}
@@ -51,26 +53,24 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - WIPE_REDIS_ON_START=${WIPE_REDIS_ON_START}
-      - UID=${UID}
-      - GID=${GID}
+      - EXECUTE_LOCAL_COMMANDS=${EXECUTE_LOCAL_COMMANDS}
     ports:
       - 8080:8080
-    command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python scripts/main.py ${COMMAND_LINE_PARAMS}"]
+    command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt ${COMMAND_LINE_PARAMS}"]
       # [--continuous] [--speak] [--debug] [--gpt3only] [--gpt4only] [--use-memory MEMORY_TYPE]
-  cache:
+  redis-stack-server:
     image: redis/redis-stack-server:latest
-    container_name: redis
-    hostname: redis
+    container_name: redis-stack-server
     networks:
       - autogpt
-    restart: always
     ports:
-      - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning --protected-mode no
+      - "127.0.0.1:6379:6379"
+    command: [ "redis-stack-server", "--requirepass", "${REDIS_PASSWORD}" ]
     volumes:
-      - cache:/data
+      - redis-data:/data
+
 networks:
   autogpt:
 volumes:
-  cache:
+  redis-data:
     driver: local

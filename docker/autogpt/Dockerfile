@@ -12,12 +12,11 @@ ADD https://github.com/sorenisanerd/gotty/releases/download/${GOTTY_VERSION}/got
 RUN tar -xzvf "gotty-$(uname -m).tar.gz"
 RUN apk update
 RUN apk add --no-cache git
-RUN git clone -b stable https://github.com/Significant-Gravitas/Auto-GPT.git
+RUN git clone -b stable https://github.com/tvup/Auto-GPT.git
 
 ##############################
 
-FROM amd64/python:3.11-alpine
-#FROM python:3.10-alpine
+FROM python:3.11-slim
 
 COPY --chmod=+x --from=builder /build/gotty /bin/gotty
 
@@ -25,17 +24,44 @@ WORKDIR /app
 
 COPY --from=builder /build/Auto-GPT/ /app
 
-RUN apk update && apk add --no-cache git vim curl pkgconfig \
-cairo-dev g++ gcc libffi-dev libjpeg-turbo-dev libxml2-dev libxslt-dev \
-gstreamer gst-plugins-base gst-plugins-good \
-girara-dev gobject-introspection-dev sudo wget curl \
-&& addgroup -g 1000 -S auto-gpt && adduser -u 1000 -S -G auto-gpt auto-gpt \
-&& pip install --upgrade pip \
-&& pip install pycairo PyGObject \
-&& python3 -m pip install --no-cache-dir --user -r requirements.txt \
-&& chown -R 1000:1000 /app
 
-USER 1000
+
+RUN apt update
+RUN apt install -y git vim nano curl wget sudo
+RUN apt install -y pkg-config g++ gcc
+RUN apt install -y chromium firefox-esr
+RUN apt install -y libcairo-dev libffi-dev libjpeg-dev libxml2-dev libxslt-dev \
+gstreamer-qapt gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+libgirara-dev libgirepository1.0-dev
+
+ARG user=docker
+ARG group=docker
+ARG UID=1000
+ARG GID=1000
+ARG app_home=/app
+
+#RUN groupadd -g ${GID} ${group}
+RUN adduser ${UID} --disabled-password --force-badname
+RUN adduser ${UID} sudo
+RUN adduser ${UID} ${GID}
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' | tee -a /etc/sudoers
+USER ${UID}
+CMD /bin/bash
+RUN sudo apt-get update
+RUN sudo apt-get install wget gnupg
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+RUN sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+RUN sudo apt-get update
+RUN sudo apt-get install google-chrome-stable
+RUN sudo pip install --upgrade pip
+RUN sudo pip install pycairo PyGObject
+RUN sudo python3 -m pip install --no-cache-dir -r requirements.txt
+USER root
+RUN chown -R ${UID}:${GID} /app
+RUN chown -R ${UID}:${GID} /home/${UID}
+RUN chmod -R a+rx /usr/bin
+
+USER ${UID}
 
 ENV PINECONE_API_KEY=${PINECONE_API_KEY} \
     PINECONE_ENV=${PINECONE_ENV} \

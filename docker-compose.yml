@@ -53,7 +53,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - WIPE_REDIS_ON_START=${WIPE_REDIS_ON_START}
       - EXECUTE_LOCAL_COMMANDS=${EXECUTE_LOCAL_COMMANDS}
-      - RESTRICT_TO_WORKSPACE=True=${RESTRICT_TO_WORKSPACE=True}
+      - RESTRICT_TO_WORKSPACE=${RESTRICT_TO_WORKSPACE}
     ports:
       - '${FORWARD_APP_PORT:-8080}:8080'
     command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt --gpt3only ${COMMAND_LINE_PARAMS}"]

@@ -55,7 +55,7 @@ services:
       - EXECUTE_LOCAL_COMMANDS=${EXECUTE_LOCAL_COMMANDS}
     ports:
       - '${FORWARD_APP_PORT:-8080}:8080'
-    command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt ${COMMAND_LINE_PARAMS}"]
+    command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt --gpt3only ${COMMAND_LINE_PARAMS}"]
       # [--continuous] [--speak] [--debug] [--gpt3only] [--gpt4only] [--use-memory MEMORY_TYPE]
   redis-stack-server:
     image: redis/redis-stack-server:latest

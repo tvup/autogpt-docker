@@ -5,7 +5,6 @@ services:
       context: ./docker/autogpt
       dockerfile: Dockerfile
     image: tvup/autogpt-gotty
-    container_name: autogpt-gotty
     hostname: autogpt
     restart: on-failure
     init: true
@@ -55,16 +54,15 @@ services:
       - WIPE_REDIS_ON_START=${WIPE_REDIS_ON_START}
       - EXECUTE_LOCAL_COMMANDS=${EXECUTE_LOCAL_COMMANDS}
     ports:
-      - 8080:8080
+      - '${FORWARD_APP_PORT:-8080}:8080'
     command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt ${COMMAND_LINE_PARAMS}"]
       # [--continuous] [--speak] [--debug] [--gpt3only] [--gpt4only] [--use-memory MEMORY_TYPE]
   redis-stack-server:
     image: redis/redis-stack-server:latest
-    container_name: redis-stack-server
     networks:
       - autogpt
     ports:
-      - "127.0.0.1:6379:6379"
+      - '127.0.0.1:${FORWARD_REDIS_PORT:-6379}:6379'
     command: [ "redis-stack-server", "--requirepass", "${REDIS_PASSWORD}" ]
     volumes:
       - redis-data:/data

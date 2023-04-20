@@ -10,8 +10,6 @@ services:
     init: true
     stop_grace_period: 1m
     tty: true
-    networks:
-      - autogpt
     volumes:
       - /run/user/1000/pulse:/run/user/1000/pulse
       - ${PWD}/workspace/:/app/auto_gpt_workspace/
@@ -28,10 +26,6 @@ services:
         source: ${PWD}/auto-gpt.json
         target: /app/auto-gpt.json
         read_only: false
-    devices:
-      - "/dev/snd:/dev/snd"
-    depends_on:
-      - redis-stack-server
     environment:
       - PULSE_SERVER=unix:/run/user/1000/pulse/native
       - PINECONE_API_KEY=${PINECONE_API_KEY}
@@ -64,18 +58,3 @@ services:
       - '${FORWARD_APP_PORT:-8080}:8080'
     command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt --gpt3only ${COMMAND_LINE_PARAMS}"]
       # [--continuous] [--speak] [--debug] [--gpt3only] [--gpt4only] [--use-memory MEMORY_TYPE]
-  redis-stack-server:
-    image: redis/redis-stack-server:latest
-    networks:
-      - autogpt
-    ports:
-      - '127.0.0.1:${FORWARD_REDIS_PORT:-6379}:6379'
-    command: [ "redis-stack-server", "--requirepass", "${REDIS_PASSWORD}" ]
-    volumes:
-      - redis-data:/data
-
-networks:
-  autogpt:
-volumes:
-  redis-data:
-    driver: local

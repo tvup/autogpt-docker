@@ -9,7 +9,7 @@ metadata:
     io.kompose.service: app
   name: app
 spec:
-  type: loadbalancer
+  type: LoadBalancer
   ports:
     - name: "8080"
       port: 8080

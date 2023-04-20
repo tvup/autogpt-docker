@@ -29,7 +29,7 @@ spec:
             - name: CUSTOM_SEARCH_ENGINE_ID
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: app-secrets
                   key: CUSTOM_SEARCH_ENGINE_ID
             - name: ELEVENLABS_API_KEY
               value: ${ELEVENLABS_API_KEY}
@@ -44,12 +44,12 @@ spec:
             - name: GOOGLE_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: app-secrets
                   key: GOOGLE_API_KEY
             - name: HUGGINGFACE_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: app-secrets
                   key: HUGGINGFACE_API_TOKEN
             - name: IMAGE_PROVIDER
               value: ${IMAGE_PROVIDER}
@@ -58,7 +58,7 @@ spec:
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: app-secrets
                   key: OPENAI_API_KEY
             - name: OPENAI_AZURE_API_BASE
               value: ${OPENAI_AZURE_API_BASE}
@@ -69,7 +69,7 @@ spec:
             - name: PINECONE_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: app-secrets
                   key: PINECONE_API_KEY
             - name: PINECONE_ENV
               value: ${PINECONE_ENV}
@@ -78,7 +78,7 @@ spec:
             - name: RAPID_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: app-secrets
                   key: RAPID_API_KEY
             - name: REDIS_HOST
               value: ${REDIS_HOST}
@@ -97,11 +97,11 @@ spec:
             - name: U_COOKIE
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: app-secrets
                   key: U_COOKIE
             - name: WIPE_REDIS_ON_START
               value: ${WIPE_REDIS_ON_START}
-          image: autogpt
+          image: registry.digitalocean.com/torben-it-registry/autogpt
           name: app
           ports:
             - containerPort: 8080

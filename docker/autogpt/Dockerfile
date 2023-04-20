@@ -31,14 +31,21 @@ RUN apt install -y git vim nano curl wget sudo
 RUN apt install -y pkg-config g++ gcc
 RUN apt install -y chromium firefox-esr
 RUN apt install -y libcairo-dev libffi-dev libjpeg-dev libxml2-dev libxslt-dev \
-gstreamer-qapt gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-libgirara-dev libgirepository1.0-dev
+    gstreamer-qapt gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    libgirara-dev libgirepository1.0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools \
+    gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 \
+    gstreamer1.0-pulseaudio pulseaudio
 
 ARG user=docker
 ARG group=docker
 ARG UID=1000
 ARG GID=1000
 ARG app_home=/app
+
+RUN groupmod -g 92 audio
+RUN groupmod -g 91 video
 
 #RUN groupadd -g ${GID} ${group}
 RUN adduser ${UID} --disabled-password --force-badname

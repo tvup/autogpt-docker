@@ -1,31 +1,12 @@
 version: "3.7"
 services:
   app:
-    build:
-      context: ./docker/autogpt
-      dockerfile: Dockerfile
-    image: tvup/autogpt-gotty
+    image: autogpt
     hostname: autogpt
-    restart: on-failure
+    restart: always
     init: true
     stop_grace_period: 1m
     tty: true
-    volumes:
-      - /run/user/1000/pulse:/run/user/1000/pulse
-      - ${PWD}/workspace/:/app/auto_gpt_workspace/
-      - ${PWD}/logs/:/logs/
-      - type: bind
-        source: ${PWD}/.env
-        target: /app/.env
-        read_only: true
-      - type: bind
-        source: ${PWD}/ai_settings.yaml
-        target: /app/ai_settings.yaml
-        read_only: false
-      - type: bind
-        source: ${PWD}/auto-gpt.json
-        target: /app/auto-gpt.json
-        read_only: false
     environment:
       - PULSE_SERVER=unix:/run/user/1000/pulse/native
       - PINECONE_API_KEY=${PINECONE_API_KEY}
@@ -55,6 +36,4 @@ services:
       - RAPID_API_KEY=${RAPID_API_KEY}
       - U_COOKIE=${U_COOKIE}
     ports:
-      - '${FORWARD_APP_PORT:-8080}:8080'
-    command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt --gpt3only ${COMMAND_LINE_PARAMS}"]
-      # [--continuous] [--speak] [--debug] [--gpt3only] [--gpt4only] [--use-memory MEMORY_TYPE]
+      - '8080:8080'

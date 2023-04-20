@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: app
+  name: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: app
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/autogpt-docker-kubernetes-default: "true"
+        io.kompose.service: app
+    spec:
+      containers:
+        - env:
+            - name: CUSTOM_SEARCH_ENGINE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: CUSTOM_SEARCH_ENGINE_ID
+            - name: ELEVENLABS_API_KEY
+              value: ${ELEVENLABS_API_KEY}
+            - name: ELEVENLABS_VOICE_1_ID
+              value: ${ELEVENLABS_VOICE_1_ID}
+            - name: ELEVENLABS_VOICE_2_ID
+              value: ${ELEVENLABS_VOICE_2_ID}
+            - name: EXECUTE_LOCAL_COMMANDS
+              value: ${EXECUTE_LOCAL_COMMANDS}
+            - name: FAST_LLM_MODEL
+              value: ${FAST_LLM_MODEL}
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: GOOGLE_API_KEY
+            - name: HUGGINGFACE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: HUGGINGFACE_API_TOKEN
+            - name: IMAGE_PROVIDER
+              value: ${IMAGE_PROVIDER}
+            - name: MEMORY_BACKEND
+              value: ${MEMORY_BACKEND}
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: OPENAI_API_KEY
+            - name: OPENAI_AZURE_API_BASE
+              value: ${OPENAI_AZURE_API_BASE}
+            - name: OPENAI_AZURE_API_VERSION
+              value: ${OPENAI_AZURE_API_VERSION}
+            - name: OPENAI_AZURE_DEPLOYMENT_ID
+              value: ${OPENAI_AZURE_DEPLOYMENT_ID}
+            - name: PINECONE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: PINECONE_API_KEY
+            - name: PINECONE_ENV
+              value: ${PINECONE_ENV}
+            - name: PULSE_SERVER
+              value: unix:/run/user/1000/pulse/native
+            - name: RAPID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: RAPID_API_KEY
+            - name: REDIS_HOST
+              value: ${REDIS_HOST}
+            - name: REDIS_PASSWORD
+              value: ${REDIS_PASSWORD}
+            - name: REDIS_PORT
+              value: ${REDIS_PORT}
+            - name: RESTRICT_TO_WORKSPACE
+              value: ${RESTRICT_TO_WORKSPACE}
+            - name: SMART_LLM_MODEL
+              value: ${SMART_LLM_MODEL}
+            - name: USE_AZURE
+              value: ${USE_AZURE}
+            - name: USE_MAC_OS_TTS
+              value: ${USE_MAC_OS_TTS}
+            - name: U_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: U_COOKIE
+            - name: WIPE_REDIS_ON_START
+              value: ${WIPE_REDIS_ON_START}
+          image: autogpt
+          name: app
+          ports:
+            - containerPort: 8080
+          resources: {}
+          tty: true
+      hostname: autogpt
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+status: {}

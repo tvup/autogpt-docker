@@ -4,11 +4,22 @@
 
 replicaCount: 1
 
-gptvolume: writer-volume
-namespace: testerdet
+gptVolume: writer-volume
 
-api:
-  address: "tes"
+secret:
+  pineconeApiKey: ""
+  openAIApiKey: ""
+  elevenlabsApiKey: "="
+  googleApiKey: ""
+  customSearchEngineId: ""
+  huggingfaceApiToken: ""
+  rapidApiKey: ""
+  uCookie: |
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxx
 
 image:
   repository: registry.digitalocean.com/torben-it-registry/autogpt
@@ -21,7 +32,7 @@ fullnameOverride: ""
 service:
   type: NodePort
   port: 50001
-  nodeport: 31001
+  nodePort: 31000
 
 ingress:
   enabled: false

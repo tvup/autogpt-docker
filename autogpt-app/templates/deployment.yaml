@@ -14,19 +14,16 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          command: [ "gotty" ]
-          args: [ "--port", "50001", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "screen -R -m python -m autogpt" ]
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - ln -s /app/auto_gpt_workspace/ai_settings.yaml /app/ai_settings.yaml;
+              gotty --port 50001 --permit-write --title-format "AutoGPT Terminal" bash -c "screen -R -m python -m autogpt";
           resources: {}
           tty: true
           image: "{{ .Values.image.repository }}"
           volumeMounts:
             - mountPath: "/app/auto_gpt_workspace"
-              name: {{ .Values.gptvolume }}
-          volumes:
-            - type: bind
-              source: /app/auto_gpt_workspace/ai_settings.yaml
-              target: /app/ai_settings.yaml
-              read_only: false
+              name: "{{ .Values.gptVolume }}"
           env:
             - name: "PORT"
               value: "50001"
@@ -177,6 +174,6 @@ spec:
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
       volumes:
-        - name: {{ .Values.gptvolume }}
+        - name: {{ .Values.gptVolume }}
           persistentVolumeClaim:
             claimName: {{ include "autogpt-app.fullname" . }}-claim

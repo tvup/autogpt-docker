@@ -1,31 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.28.0 (c4137012e)
-  creationTimestamp: null
-  labels:
-    io.kompose.service: app
   name: app
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: app
-  strategy: {}
+      app: app
+  replicas: 1
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.28.0 (c4137012e)
-      creationTimestamp: null
       labels:
-        io.kompose.network/autogpt-docker-kubernetes-default: "true"
-        io.kompose.service: app
+        app: app
     spec:
       containers:
-        - env:
+        - name: app
+          command: [ "gotty" ]
+          args: [ "--port", "50001", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt" ]
+          resources: { }
+          tty: true
+          image: registry.digitalocean.com/torben-it-registry/autogpt
+          env:
+            - name: "PORT"
+              value: "50001"
             - name: CUSTOM_SEARCH_ENGINE_ID
               valueFrom:
                 secretKeyRef:
@@ -101,13 +97,6 @@ spec:
                   key: U_COOKIE
             - name: WIPE_REDIS_ON_START
               value: ${WIPE_REDIS_ON_START}
-          image: registry.digitalocean.com/torben-it-registry/autogpt
-          name: app
-          ports:
-            - containerPort: 8080
-          resources: {}
-          tty: true
-      hostname: autogpt
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
 status: {}

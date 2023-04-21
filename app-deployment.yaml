@@ -1,0 +1,180 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  selector:
+    matchLabels:
+      app: app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - ln -s /app/auto_gpt_workspace/ai_settings.yaml /app/ai_settings.yaml;
+              gotty --port 50001 --permit-write --title-format "AutoGPT Terminal" bash -c "screen -R -m python -m autogpt";
+          resources: { }
+          tty: true
+          image: registry.digitalocean.com/torben-it-registry/autogpt
+          volumeMounts:
+            - mountPath: "/app/auto_gpt_workspace"
+              name: writer-volume
+          env:
+            - name: "PORT"
+              value: "50001"
+            - name: CUSTOM_SEARCH_ENGINE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: CUSTOM_SEARCH_ENGINE_ID
+            - name: ELEVENLABS_API_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: ELEVENLABS_API_KEY
+            - name: ELEVENLABS_VOICE_1_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: ELEVENLABS_VOICE_1_ID
+            - name: ELEVENLABS_VOICE_2_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: ELEVENLABS_VOICE_2_ID
+            - name: EXECUTE_LOCAL_COMMANDS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: EXECUTE_LOCAL_COMMANDS
+            - name: FAST_LLM_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: FAST_LLM_MODEL
+            - name: GOOGLE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: GOOGLE_API_KEY
+            - name: HUGGINGFACE_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: HUGGINGFACE_API_TOKEN
+            - name: IMAGE_PROVIDER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: IMAGE_PROVIDER
+            - name: MEMORY_BACKEND
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: MEMORY_BACKEND
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: OPENAI_API_KEY
+            - name: OPENAI_AZURE_API_BASE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: OPENAI_AZURE_API_BASE
+            - name: OPENAI_AZURE_API_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: OPENAI_AZURE_API_VERSION
+            - name: OPENAI_AZURE_DEPLOYMENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: OPENAI_AZURE_DEPLOYMENT_ID
+            - name: PINECONE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: PINECONE_API_KEY
+            - name: PINECONE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: PINECONE_ENV
+            - name: PULSE_SERVER
+              value: unix:/run/user/1000/pulse/native
+            - name: RAPID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: RAPID_API_KEY
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: REDIS_HOST
+            - name: REDIS_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: REDIS_PASSWORD
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: REDIS_PORT
+            - name: RESTRICT_TO_WORKSPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: RESTRICT_TO_WORKSPACE
+            - name: SMART_LLM_MODEL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: SMART_LLM_MODEL
+            - name: USE_AZURE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: USE_AZURE
+            - name: USE_MAC_OS_TTS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: USE_MAC_OS_TTS
+            - name: U_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: U_COOKIE
+            - name: WIPE_REDIS_ON_START
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: WIPE_REDIS_ON_START
+            - name: CHAT_HISTORY_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: CHAT_HISTORY_FILE
+      initContainers:
+        - name: volume-mount-hack
+          image: busybox
+          command: [ "sh", "-c", "chown -R 1000:1000 /app/auto_gpt_workspace" ]
+          volumeMounts:
+            - name: writer-volume
+              mountPath: /app/auto_gpt_workspace
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: writer-volume
+          persistentVolumeClaim:
+            claimName: writer-data
+status: {}

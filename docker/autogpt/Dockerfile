@@ -30,6 +30,7 @@ RUN apt update
 RUN apt install -y git vim nano curl wget sudo
 RUN apt install -y pkg-config g++ gcc
 RUN apt install -y chromium firefox-esr
+RUN apt install -y screen
 RUN apt install -y libcairo-dev libffi-dev libjpeg-dev libxml2-dev libxslt-dev \
     gstreamer-qapt gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     libgirara-dev libgirepository1.0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \

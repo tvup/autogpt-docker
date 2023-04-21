@@ -7,3 +7,5 @@ logs/*
 workspace/*
 cache/*
 .env
+app-secret.yaml
+.idea/*

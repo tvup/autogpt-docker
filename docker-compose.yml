@@ -60,9 +60,10 @@ services:
       - RESTRICT_TO_WORKSPACE=${RESTRICT_TO_WORKSPACE}
       - RAPID_API_KEY=${RAPID_API_KEY}
       - U_COOKIE=${U_COOKIE}
+      - CHAT_HISTORY_FILE=${CHAT_HISTORY_FILE}
     ports:
       - '${FORWARD_APP_PORT:-8080}:8080'
-    command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt --gpt3only ${COMMAND_LINE_PARAMS}"]
+    command: ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt  ${COMMAND_LINE_PARAMS}"]
       # [--continuous] [--speak] [--debug] [--gpt3only] [--gpt4only] [--use-memory MEMORY_TYPE]
   redis-stack-server:
     image: redis/redis-stack-server:latest

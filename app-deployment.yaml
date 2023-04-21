@@ -15,10 +15,13 @@ spec:
       containers:
         - name: app
           command: [ "gotty" ]
-          args: [ "--port", "50001", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt" ]
+          args: [ "--port", "50001", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "screen -R -m python -m autogpt" ]
           resources: { }
           tty: true
           image: registry.digitalocean.com/torben-it-registry/autogpt
+          volumeMounts:
+            - mountPath: "/app/auto_gpt_workspace"
+              name: writer-volume
           env:
             - name: "PORT"
               value: "50001"
@@ -154,6 +157,22 @@ spec:
                 configMapKeyRef:
                   name: app-configs
                   key: WIPE_REDIS_ON_START
+            - name: CHAT_HISTORY_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: CHAT_HISTORY_FILE
+      initContainers:
+        - name: volume-mount-hack
+          image: busybox
+          command: [ "sh", "-c", "chown -R 1000:1000 /app/auto_gpt_workspace" ]
+          volumeMounts:
+            - name: writer-volume
+              mountPath: /app/auto_gpt_workspace
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
+      volumes:
+        - name: writer-volume
+          persistentVolumeClaim:
+            claimName: writerdata
 status: {}

@@ -70,7 +70,7 @@ kubectl create configmap app-configs --from-env-file=.env
 
 Then apply these files:
 ```commandline
-kubectl apply -f app-deployment.yaml,app-service.yaml,autogpt-docker-kubernetes-default-networkpolicy.yaml,secret.yaml
+kubectl create -f app-deployment.yaml,app-service.yaml,autogpt-docker-kubernetes-default-networkpolicy.yaml,secret.yaml
 ```
 
 Find the internal IP of the pod
@@ -81,6 +81,16 @@ kubectl get nodes -o=wide
 Access the lovely thing
 http://10.133.120.231:31000/ (using the internal address, you must be inside a VPC or the like to access. Else you could make it public by chaning the service to a load balancer .... I wouldn't recommend it though)
 
+
+Useful commands
+```commandline
+docker build -t autogpt .
+doctl kubernetes cluster create torben-it-kubcluster --auto-upgrade=true --region ams3 --node-pool "name=torben-it-pool-1;count=2;auto-scale=true;min-nodes=1;max-nodes=3"
+kubectl expose deployment app --port=8080 --target-port=8080 --name=app --type=LoadBalancer
+kubectl exec --stdin --tty shell-demo -- /bin/bash
+docker tag autogpt registry.digitalocean.com/torben-it-registry/autogpt
+docker push registry.digitalocean.com/<your-registry-name>/my-python-app
+```
 ## TODO
 
 - Check if `gotty` can pass audio from the autogpt `--speak` option

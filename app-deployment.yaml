@@ -28,15 +28,30 @@ spec:
                   name: app-secrets
                   key: CUSTOM_SEARCH_ENGINE_ID
             - name: ELEVENLABS_API_KEY
-              value: ${ELEVENLABS_API_KEY}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: ELEVENLABS_API_KEY
             - name: ELEVENLABS_VOICE_1_ID
-              value: ${ELEVENLABS_VOICE_1_ID}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: ELEVENLABS_VOICE_1_ID
             - name: ELEVENLABS_VOICE_2_ID
-              value: ${ELEVENLABS_VOICE_2_ID}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: ELEVENLABS_VOICE_2_ID
             - name: EXECUTE_LOCAL_COMMANDS
-              value: ${EXECUTE_LOCAL_COMMANDS}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: EXECUTE_LOCAL_COMMANDS
             - name: FAST_LLM_MODEL
-              value: ${FAST_LLM_MODEL}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: FAST_LLM_MODEL
             - name: GOOGLE_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -48,27 +63,45 @@ spec:
                   name: app-secrets
                   key: HUGGINGFACE_API_TOKEN
             - name: IMAGE_PROVIDER
-              value: ${IMAGE_PROVIDER}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: IMAGE_PROVIDER
             - name: MEMORY_BACKEND
-              value: ${MEMORY_BACKEND}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: MEMORY_BACKEND
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: app-secrets
                   key: OPENAI_API_KEY
             - name: OPENAI_AZURE_API_BASE
-              value: ${OPENAI_AZURE_API_BASE}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: OPENAI_AZURE_API_BASE
             - name: OPENAI_AZURE_API_VERSION
-              value: ${OPENAI_AZURE_API_VERSION}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: OPENAI_AZURE_API_VERSION
             - name: OPENAI_AZURE_DEPLOYMENT_ID
-              value: ${OPENAI_AZURE_DEPLOYMENT_ID}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: OPENAI_AZURE_DEPLOYMENT_ID
             - name: PINECONE_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: app-secrets
                   key: PINECONE_API_KEY
             - name: PINECONE_ENV
-              value: ${PINECONE_ENV}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: PINECONE_ENV
             - name: PULSE_SERVER
               value: unix:/run/user/1000/pulse/native
             - name: RAPID_API_KEY
@@ -77,26 +110,50 @@ spec:
                   name: app-secrets
                   key: RAPID_API_KEY
             - name: REDIS_HOST
-              value: ${REDIS_HOST}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: REDIS_HOST
             - name: REDIS_PASSWORD
-              value: ${REDIS_PASSWORD}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: REDIS_PASSWORD
             - name: REDIS_PORT
-              value: ${REDIS_PORT}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: REDIS_PORT
             - name: RESTRICT_TO_WORKSPACE
-              value: ${RESTRICT_TO_WORKSPACE}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: RESTRICT_TO_WORKSPACE
             - name: SMART_LLM_MODEL
-              value: ${SMART_LLM_MODEL}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: SMART_LLM_MODEL
             - name: USE_AZURE
-              value: ${USE_AZURE}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: USE_AZURE
             - name: USE_MAC_OS_TTS
-              value: ${USE_MAC_OS_TTS}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: USE_MAC_OS_TTS
             - name: U_COOKIE
               valueFrom:
                 secretKeyRef:
                   name: app-secrets
                   key: U_COOKIE
             - name: WIPE_REDIS_ON_START
-              value: ${WIPE_REDIS_ON_START}
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: WIPE_REDIS_ON_START
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
 status: {}

@@ -1,10 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  creationTimestamp: null
-  labels:
-    io.kompose.service: writerdata
-  name: writerdata
+  name: autogpt-claim
 spec:
   accessModes:
   - ReadWriteOnce
@@ -12,4 +9,3 @@ spec:
     requests:
       storage: 100Gi
   storageClassName: do-block-storage-retain
-status: {}

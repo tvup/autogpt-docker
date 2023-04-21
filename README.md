@@ -53,6 +53,34 @@ This repository provides a convenient and secure solution to run Auto-GPT in a D
 
 To access the terminal UI via a browser, visit `http://127.0.0.1:8080` or the IP address of the system it's running on. 
 
+## Kubernetes
+
+The whole thing can also run in a kubernetes cluster.
+
+First create the secrets:
+Remember to base_encode the secrets before putting them in (in secret.yaml)
+```commandline
+echo -n 'some_secret_i_have' | base64
+```
+
+Omit the secrets from the .env and then run to have the variables loaded as a configmap and loaded as environment variables into the pods:
+```commandline
+kubectl create configmap app-configs --from-env-file=.env
+```
+
+Then apply these files:
+```commandline
+kubectl apply -f app-deployment.yaml,app-service.yaml,autogpt-docker-kubernetes-default-networkpolicy.yaml,secret.yaml
+```
+
+Find the internal IP of the pod
+```commandline
+kubectl get nodes -o=wide
+```
+
+Access the lovely thing
+http://10.133.120.231:31000/ (using the internal address, you must be inside a VPC or the like to access. Else you could make it public by chaning the service to a load balancer .... I wouldn't recommend it though)
+
 ## TODO
 
 - Check if `gotty` can pass audio from the autogpt `--speak` option

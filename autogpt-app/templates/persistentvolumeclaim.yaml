@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: autogpt-claim
+  name: {{ include "autogpt-app.fullname" . }}-claim
 spec:
   accessModes:
   - ReadWriteOnce

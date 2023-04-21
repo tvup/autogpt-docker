@@ -174,4 +174,4 @@ spec:
       volumes:
         - name: {{ .Values.gptvolume }}
           persistentVolumeClaim:
-            claimName: autogpt-claim
+            claimName: {{ include "autogpt-app.fullname" . }}-claim

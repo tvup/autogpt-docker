@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: writerdata
-  name: writerdata
+    io.kompose.service: writer-data
+  name: writer-data
 spec:
   accessModes:
   - ReadWriteOnce

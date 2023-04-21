@@ -70,7 +70,7 @@ kubectl create configmap app-configs --from-env-file=.env
 
 Then apply these files:
 ```commandline
-kubectl create -f app-deployment.yaml,app-service.yaml,autogpt-docker-kubernetes-default-networkpolicy.yaml,secret.yaml
+kubectl create -f app-autogpt-docker-kubernetes-default-networkpolicy.yaml,app-configmap.yaml,app-deployment.yaml,app-persistentvolumeclaim.yaml,app-service.yaml,app-secret.yaml
 ```
 
 Find the internal IP of the pod
@@ -91,6 +91,17 @@ kubectl exec --stdin --tty shell-demo -- /bin/bash
 docker tag autogpt registry.digitalocean.com/torben-it-registry/autogpt
 docker push registry.digitalocean.com/<your-registry-name>/my-python-app
 ```
+
+### tvup/Auto-GPT:stable has changed - how to update
+```commandline
+cd docker/autogpt
+docker build autogpt . --no-cache
+docker tag autogpt registry.digitalocean.com/torben-it-registry/autogpt
+docker push registry.digitalocean.com/torben-it-registry/autogpt
+cd ../../
+kubectl apply -f app-autogpt-docker-kubernetes-default-networkpolicy.yaml,app-configmap.yaml,app-deployment.yaml,app-persistentvolumeclaim.yaml,app-service.yaml,app-secret.yaml
+```
+
 ## TODO
 
 - Check if `gotty` can pass audio from the autogpt `--speak` option

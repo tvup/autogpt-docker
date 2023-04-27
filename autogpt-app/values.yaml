@@ -30,7 +30,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
-  type: NodePort
+  type: LoadBalancer
   port: 50001
   nodePort: 31000
 

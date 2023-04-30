@@ -169,6 +169,36 @@ spec:
                 configMapKeyRef:
                   name: app-configs
                   key: WIPE_REDIS_ON_START
+            - name: GITHUB_API_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: GITHUB_API_KEY
+            - name: GITHUB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: GITHUB_USERNAME
+            - name: TW_CONSUMER_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: TW_CONSUMER_KEY
+            - name: TW_CONSUMER_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: TW_CONSUMER_SECRET
+            - name: TW_ACCESS_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: TW_ACCESS_TOKEN
+            - name: TW_ACCESS_TOKEN_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configs
+                  key: TW_ACCESS_TOKEN_SECRET
             - name: CHAT_HISTORY_FILE
               valueFrom:
                 configMapKeyRef:

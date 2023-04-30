@@ -14,27 +14,13 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          readinessProbe:
-            tcpSocket:
-              port: 50001
-            initialDelaySeconds: 5
-            periodSeconds: 15
-          livenessProbe:
-            tcpSocket:
-              port: 50001
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          command: [ "/bin/sh", "-c" ]
-          args:
-            - ln -s /app/auto_gpt_workspace/ai_settings.yaml /app/ai_settings.yaml;
-              gotty --port 50001 --permit-write --title-format "AutoGPT Terminal" bash -c "screen -R -m python -m autogpt";
-          resources: {}
-          tty: true
-          image: "{{ .Values.image.repository }}"
-          volumeMounts:
-            - mountPath: "/app/auto_gpt_workspace"
-              name: "{{ .Values.gptVolume }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+          {{- range $key, $val := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+          {{- end }}
             - name: "PORT"
               value: "50001"
             - name: CUSTOM_SEARCH_ENGINE_ID
@@ -174,6 +160,26 @@ spec:
                 configMapKeyRef:
                   name: app-configs
                   key: CHAT_HISTORY_FILE
+          readinessProbe:
+            tcpSocket:
+              port: 50001
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            tcpSocket:
+              port: 50001
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - ln -s /app/auto_gpt_workspace/ai_settings.yaml /app/ai_settings.yaml;
+              gotty --port 50001 --permit-write --title-format "AutoGPT Terminal" bash -c "screen -R -m python -m autogpt";
+          resources: {}
+          tty: true
+          volumeMounts:
+            - mountPath: "/app/auto_gpt_workspace"
+              name: "{{ .Values.gptVolume }}"
+
       initContainers:
         - name: volume-mount-hack
           image: busybox

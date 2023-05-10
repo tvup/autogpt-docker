@@ -95,7 +95,7 @@ docker push registry.digitalocean.com/<your-registry-name>/my-python-app
 ### tvup/Auto-GPT:stable has changed - how to update
 ```commandline
 cd docker/autogpt
-docker build autogpt . --no-cache
+docker build -t autogpt . --no-cache
 docker tag autogpt registry.digitalocean.com/torben-it-registry/autogpt
 docker push registry.digitalocean.com/torben-it-registry/autogpt
 cd ../../

@@ -42,18 +42,17 @@ RUN apt install -y libcairo-dev libffi-dev libjpeg-dev libxml2-dev libxslt-dev \
 ARG user=docker
 ARG group=docker
 ARG UID=1000
-ARG GID=1000
+ARG USERNAME=myuser
 ARG app_home=/app
 
 RUN groupmod -g 92 audio
 RUN groupmod -g 91 video
 
-#RUN groupadd -g ${GID} ${group}
-RUN adduser ${UID} --disabled-password --force-badname
-RUN adduser ${UID} sudo
-RUN adduser ${UID} ${GID}
+RUN adduser --disabled-password --force-badname --gecos "" --uid ${UID} ${USERNAME}
+
+RUN adduser ${USERNAME} sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' | tee -a /etc/sudoers
-USER ${UID}
+USER ${USERNAME}
 CMD /bin/bash
 RUN sudo apt-get update
 RUN sudo apt-get install wget gnupg
@@ -65,11 +64,11 @@ RUN sudo pip install --upgrade pip
 RUN sudo pip install pycairo PyGObject
 RUN sudo python3 -m pip install --no-cache-dir -r requirements.txt
 USER root
-RUN chown -R ${UID}:${GID} /app
-RUN chown -R ${UID}:${GID} /home/${UID}
+RUN chown -R ${USERNAME}:${GID} /app
+RUN chown -R ${USERNAME}:${GID} /home/${USERNAME}
 RUN chmod -R a+rx /usr/bin
 
-USER ${UID}
+USER ${USERNAME}
 
 ENV PINECONE_API_KEY=${PINECONE_API_KEY} \
     PINECONE_ENV=${PINECONE_ENV} \

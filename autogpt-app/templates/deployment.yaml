@@ -172,16 +172,11 @@ spec:
           tty: true
           volumeMounts:
             - name: workspace
-              mountPath: /app/autogpt
-              subPath: auto_gpt_workspace
+              mountPath: /app/autogpt/auto_gpt_workspace
             - name: logs
-              mountPath: /app
-              subPath: logs
+              mountPath: /app/logs
             - name: data
-              mountPath: /app
-              subPath: data
-
-
+              mountPath: /app/data
       initContainers:
         - name: volume-mount-hack
           image: busybox

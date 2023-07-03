@@ -172,17 +172,15 @@ spec:
           tty: true
           volumeMounts:
             - name: workspace
-              mountPath: /app/auto_gpt_workspace
-              subPath: workspace
+              mountPath: /app/autogpt
+              subPath: auto_gpt_workspace
             - name: logs
-              mountPath: /logs
+              mountPath: /app
               subPath: logs
-            - name: ai-settings
-              mountPath: /app/ai_settings.yaml
-              subPath: ai_settings.yaml
-            - name: auto-gpt-json
-              mountPath: /app/auto-gpt.json
-              subPath: auto-gpt.json
+            - name: data
+              mountPath: /app
+              subPath: data
+
 
       initContainers:
         - name: volume-mount-hack
@@ -191,6 +189,12 @@ spec:
           volumeMounts:
             - name: workspace
               mountPath: /app/auto_gpt_workspace
+        - name: init-configs
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: [ 'sh', '-c', 'cp /app/ai_settings.yaml /app/autogpt/workspace/auto_gpt_workspace && cp /app/auto-gpt.json /app/autogpt/workspace/auto_gpt_workspace' ]
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
       volumes:
@@ -202,7 +206,4 @@ spec:
           claimName: {{ include "autogpt-app.fullname" . }}-logs-claim
       - name: ai-settings
         persistentVolumeClaim:
-          claimName: {{ include "autogpt-app.fullname" . }}-aisettings-claim
-      - name: auto-gpt-json
-        persistentVolumeClaim:
-          claimName: {{ include "autogpt-app.fullname" . }}-autogptjson-claim
+          claimName: {{ include "autogpt-app.fullname" . }}-data-claim

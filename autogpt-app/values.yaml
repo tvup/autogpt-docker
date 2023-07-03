@@ -80,9 +80,6 @@ persistentVolumeClaims:
 - name: logs
   size: 50Gi
   storageClassName: do-block-storage-retain
-- name: aisettings
-  size: 1Gi
-  storageClassName: do-block-storage-retain
-- name: autogptjson
-  size: 1Gi
+- name: data
+  size: 50Gi
   storageClassName: do-block-storage-retain

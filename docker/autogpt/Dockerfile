@@ -77,7 +77,7 @@ ENV PINECONE_API_KEY=${PINECONE_API_KEY} \
 COPY requirements.txt .
 
 # Set the entrypoint
-ENTRYPOINT ["gotty", "--port", "50001", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt  ${COMMAND_LINE_PARAMS}"]
+ENTRYPOINT gotty --port 50001 --permit-write --title-format "AutoGPT Terminal" /bin/bash -c "python -m autogpt ${COMMAND_LINE_PARAMS}"
 
 # dev build -> include everything
 FROM autogpt-base as autogpt-dev

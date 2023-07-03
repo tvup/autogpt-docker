@@ -171,19 +171,38 @@ spec:
             periodSeconds: 20
           tty: true
           volumeMounts:
-            - mountPath: "/app/auto_gpt_workspace"
-              name: "{{ .Values.gptVolume }}"
+            - name: workspace
+              mountPath: /app/auto_gpt_workspace
+              subPath: workspace
+            - name: logs
+              mountPath: /logs
+              subPath: logs
+            - name: ai-settings
+              mountPath: /app/ai_settings.yaml
+              subPath: ai_settings.yaml
+            - name: auto-gpt-json
+              mountPath: /app/auto-gpt.json
+              subPath: auto-gpt.json
 
       initContainers:
         - name: volume-mount-hack
           image: busybox
           command: [ "sh", "-c", "chown -R 1000:1000 /app/auto_gpt_workspace" ]
           volumeMounts:
-            - name: writer-volume
+            - name: workspace
               mountPath: /app/auto_gpt_workspace
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
       volumes:
-        - name: {{ .Values.gptVolume }}
-          persistentVolumeClaim:
-            claimName: {{ include "autogpt-app.fullname" . }}-claim
+      - name: workspace
+        persistentVolumeClaim:
+          claimName: { { include "autogpt-app.fullname" . } }-workspace-claim
+      - name: logs
+        persistentVolumeClaim:
+          claimName: { { include "autogpt-app.fullname" . } }-logs-claim
+      - name: ai-settings
+        persistentVolumeClaim:
+          claimName: { { include "autogpt-app.fullname" . } }-aisettings-claim
+      - name: auto-gpt-json
+        persistentVolumeClaim:
+         claimName: { { include "autogpt-app.fullname" . } }-auto-gpt-json-claim

@@ -1,11 +1,14 @@
+{{- range $pvc := .Values.persistentVolumeClaims }}
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "autogpt-app.fullname" . }}-claim
+  name: {{ include "autogpt-app.fullname" $ }}-{{ $pvc.name }}-claim
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
-  storageClassName: do-block-storage-retain
+      storage: {{ $pvc.size }}
+  storageClassName: {{ $pvc.storageClassName }}
+{{- end }}

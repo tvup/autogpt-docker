@@ -4,8 +4,6 @@
 
 replicaCount: 1
 
-gptVolume: writer-volume
-
 secret:
   pineconeApiKey: ""
   openAIApiKey: ""
@@ -74,3 +72,17 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+persistentVolumeClaims:
+- name: workspace
+  size: 100Gi
+  storageClassName: do-block-storage-retain
+- name: logs
+  size: 50Gi
+  storageClassName: do-block-storage-retain
+- name: ai-settings
+  size: 1Gi
+  storageClassName: do-block-storage-retain
+- name: auto-gpt-json
+  size: 1Gi
+  storageClassName: do-block-storage-retain

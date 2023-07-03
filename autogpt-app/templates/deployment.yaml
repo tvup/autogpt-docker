@@ -188,13 +188,7 @@ spec:
           command: [ "sh", "-c", "chown -R 1000:1000 /app/auto_gpt_workspace" ]
           volumeMounts:
             - name: workspace
-              mountPath: /app/auto_gpt_workspace
-        - name: init-configs
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          command: [ 'sh', '-c', 'cp /app/ai_settings.yaml /app/autogpt/workspace/auto_gpt_workspace && cp /app/auto-gpt.json /app/autogpt/workspace/auto_gpt_workspace' ]
-          volumeMounts:
-            - name: workspace
-              mountPath: /workspace
+              mountPath: /app/autogpt/auto_gpt_workspace
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
       volumes:
@@ -204,6 +198,6 @@ spec:
       - name: logs
         persistentVolumeClaim:
           claimName: {{ include "autogpt-app.fullname" . }}-logs-claim
-      - name: ai-settings
+      - name: data
         persistentVolumeClaim:
           claimName: {{ include "autogpt-app.fullname" . }}-data-claim

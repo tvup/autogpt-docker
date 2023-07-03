@@ -1,4 +1,5 @@
 ARG GOTTY_VERSION=v1.5.0
+ARG BUILD_TYPE=dev
 
 FROM alpine:3.15 AS builder
 
@@ -12,11 +13,11 @@ ADD https://github.com/sorenisanerd/gotty/releases/download/${GOTTY_VERSION}/got
 RUN tar -xzvf "gotty-$(uname -m).tar.gz"
 RUN apk update
 RUN apk add --no-cache git
-RUN git clone -b stable https://github.com/tvup/Auto-GPT.git
+RUN git clone -b stable https://github.com/Significant-Gravitas/Auto-GPT.git
 
 ##############################
 
-FROM python:3.11-slim
+FROM python:3.10-slim AS autogpt-base
 
 COPY --chmod=+x --from=builder /build/gotty /bin/gotty
 
@@ -24,52 +25,23 @@ WORKDIR /app
 
 COPY --from=builder /build/Auto-GPT/ /app
 
+# Install browsers
+RUN apt-get update && apt-get install -y \
+    chromium-driver firefox-esr ca-certificates \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install utilities
+RUN apt-get update && apt-get install -y \
+    curl jq wget git \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt update
-RUN apt install -y git vim nano curl wget sudo
-RUN apt install -y pkg-config g++ gcc
-RUN apt install -y chromium firefox-esr
-RUN apt install -y screen
-RUN apt install -y libcairo-dev libffi-dev libjpeg-dev libxml2-dev libxslt-dev \
-    gstreamer-qapt gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-    libgirara-dev libgirepository1.0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
-    libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools \
-    gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 \
-    gstreamer1.0-pulseaudio pulseaudio
+# Set environment variables
+ENV PIP_NO_CACHE_DIR=yes \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
-ARG user=docker
-ARG group=docker
-ARG UID=1000
-ARG USERNAME=myuser
-ARG app_home=/app
-
-RUN groupmod -g 92 audio
-RUN groupmod -g 91 video
-
-RUN adduser --disabled-password --force-badname --gecos "" --uid ${UID} ${USERNAME}
-
-RUN adduser ${USERNAME} sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' | tee -a /etc/sudoers
-USER ${USERNAME}
-CMD /bin/bash
-RUN sudo apt-get update
-RUN sudo apt-get install wget gnupg
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-RUN sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-RUN sudo apt-get update
-RUN sudo apt-get install google-chrome-stable
-RUN sudo pip install --upgrade pip
-RUN sudo pip install pycairo PyGObject
-RUN sudo python3 -m pip install --no-cache-dir -r requirements.txt
-USER root
-RUN chown -R ${USERNAME}:${GID} /app
-RUN chown -R ${USERNAME}:${GID} /home/${USERNAME}
-RUN chmod -R a+rx /usr/bin
-
-USER ${USERNAME}
-
+# Install the required python packages globally
+ENV PATH="$PATH:/root/.local/bin"
 ENV PINECONE_API_KEY=${PINECONE_API_KEY} \
     PINECONE_ENV=${PINECONE_ENV} \
     OPENAI_API_KEY=${OPENAI_API_KEY} \
@@ -102,6 +74,29 @@ ENV PINECONE_API_KEY=${PINECONE_API_KEY} \
     TW_ACCESS_TOKEN_SECRET=${TW_ACCESS_TOKEN_SECRET} \
     TW_BEARER_TOKEN=${TW_BEARER_TOKEN}
 
-EXPOSE 8080
+COPY requirements.txt .
 
+# Set the entrypoint
+ENTRYPOINT ["gotty", "--port", "8080", "--permit-write", "--title-format", "AutoGPT Terminal", "bash", "-c", "python -m autogpt  ${COMMAND_LINE_PARAMS}"]
+
+# dev build -> include everything
+FROM autogpt-base as autogpt-dev
+RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
+ONBUILD COPY . ./
+
+# release build -> include bare minimum
+FROM autogpt-base as autogpt-release
+RUN sed -i '/Items below this point will not be included in the Docker Image/,$d' requirements.txt && \
+	pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
+ONBUILD COPY autogpt/ ./autogpt
+ONBUILD COPY scripts/ ./scripts
+ONBUILD COPY plugins/ ./plugins
+ONBUILD COPY prompt_settings.yaml ./prompt_settings.yaml
+ONBUILD RUN mkdir ./data
+
+FROM autogpt-${BUILD_TYPE} AS auto-gpt
+
+
+

@@ -11,4 +11,5 @@ spec:
     requests:
       storage: {{ $pvc.size }}
   storageClassName: {{ $pvc.storageClassName }}
+  persistentVolumeReclaimPolicy: Delete
 {{- end }}

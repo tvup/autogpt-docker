@@ -76,10 +76,10 @@ affinity: {}
 persistentVolumeClaims:
 - name: workspace
   size: 100Gi
-  storageClassName: do-block-storage-retain
+  storageClassName: do-block-storage-delete
 - name: logs
   size: 50Gi
-  storageClassName: do-block-storage-retain
+  storageClassName: do-block-storage-delete
 - name: data
   size: 50Gi
-  storageClassName: do-block-storage-retain
+  storageClassName: do-block-storage-delete

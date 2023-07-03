@@ -13,7 +13,7 @@ ADD https://github.com/sorenisanerd/gotty/releases/download/${GOTTY_VERSION}/got
 RUN tar -xzvf "gotty-$(uname -m).tar.gz"
 RUN apk update
 RUN apk add --no-cache git
-RUN git clone -b stable https://github.com/tvup/Auto-GPT.git
+RUN git clone -b stable  https://github.com/tvup/Auto-GPT.git
 
 ##############################
 
@@ -84,6 +84,7 @@ FROM autogpt-base as autogpt-dev
 RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 ONBUILD COPY . ./
+ONBUILD RUN touch /.dockerenv
 
 # release build -> include bare minimum
 FROM autogpt-base as autogpt-release
@@ -95,6 +96,7 @@ ONBUILD COPY scripts/ ./scripts
 ONBUILD COPY plugins/ ./plugins
 ONBUILD COPY prompt_settings.yaml ./prompt_settings.yaml
 ONBUILD RUN mkdir ./data
+ONBUILD RUN touch /.dockerenv
 
 FROM autogpt-${BUILD_TYPE} AS auto-gpt
 

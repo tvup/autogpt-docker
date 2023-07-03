@@ -21,7 +21,7 @@ secret:
 
 image:
   repository: registry.digitalocean.com/torben-it-registry/autogpt
-  tag: "v0.4.3-0.3"
+  tag: "v0.4.3-0.4"
 
 imagePullSecrets: []
 nameOverride: ""

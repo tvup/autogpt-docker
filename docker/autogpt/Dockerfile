@@ -13,7 +13,7 @@ ADD https://github.com/sorenisanerd/gotty/releases/download/${GOTTY_VERSION}/got
 RUN tar -xzvf "gotty-$(uname -m).tar.gz"
 RUN apk update
 RUN apk add --no-cache git
-RUN git clone -b stable https://github.com/Significant-Gravitas/Auto-GPT.git
+RUN git clone -b stable https://github.com/tvup/Auto-GPT.git
 
 ##############################
 

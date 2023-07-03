@@ -96,9 +96,9 @@ docker push registry.digitalocean.com/<your-registry-name>/my-python-app
 ```commandline
 cd docker/autogpt
 docker build -t autogpt:v0.4.3-0.2 . --no-cache
-docker tag autogpt:v0.4.3-0.2 registry.digitalocean.com/torben-it-registry/autogpt:v0.4.3-0.2
-docker push registry.digitalocean.com/torben-it-registry/autogpt:v0.4.3-0.2
-docker tag autogpt:v0.4.3-0.2 registry.digitalocean.com/torben-it-registry/autogpt:latest
+docker tag autogpt:v0.4.3-0.4 registry.digitalocean.com/torben-it-registry/autogpt:v0.4.3-0.4
+docker push registry.digitalocean.com/torben-it-registry/autogpt:v0.4.3-0.4
+docker tag autogpt:v0.4.3-0.4 registry.digitalocean.com/torben-it-registry/autogpt:latest
 docker push registry.digitalocean.com/torben-it-registry/autogpt:latest
 cd ../../
 kubectl apply -f app-autogpt-docker-kubernetes-default-networkpolicy.yaml,app-configmap.yaml,app-deployment.yaml,app-persistentvolumeclaim.yaml,app-service.yaml,app-secret.yaml

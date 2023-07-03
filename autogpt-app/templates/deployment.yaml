@@ -196,13 +196,13 @@ spec:
       volumes:
       - name: workspace
         persistentVolumeClaim:
-          claimName: { { include "autogpt-app.fullname" . } }-workspace-claim
+          claimName: {{ include "autogpt-app.fullname" . }}-workspace-claim
       - name: logs
         persistentVolumeClaim:
-          claimName: { { include "autogpt-app.fullname" . } }-logs-claim
+          claimName: {{ include "autogpt-app.fullname" . }}-logs-claim
       - name: ai-settings
         persistentVolumeClaim:
-          claimName: { { include "autogpt-app.fullname" . } }-aisettings-claim
+          claimName: {{ include "autogpt-app.fullname" . }}-aisettings-claim
       - name: auto-gpt-json
         persistentVolumeClaim:
-         claimName: { { include "autogpt-app.fullname" . } }-auto-gpt-json-claim
+          claimName: {{ include "autogpt-app.fullname" . }}-gpt-claim

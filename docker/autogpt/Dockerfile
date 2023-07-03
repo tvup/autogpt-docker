@@ -95,6 +95,7 @@ ONBUILD COPY autogpt/ ./autogpt
 ONBUILD COPY scripts/ ./scripts
 ONBUILD COPY plugins/ ./plugins
 ONBUILD COPY prompt_settings.yaml ./prompt_settings.yaml
+ONBUILD COPY plugins_config.yaml ./plugins_config.yaml
 ONBUILD RUN mkdir ./data
 ONBUILD RUN touch /.dockerenv
 

@@ -4,7 +4,7 @@ metadata:
   name: {{ include "autogpt-app.fullname" . }}-configs
 data:
   CHAT_HISTORY_FILE: /app/auto_gpt_workspace/chat_history.jsonl
-  COMMAND_LINE_PARAMS: '""'
+  COMMAND_LINE_PARAMS: '--install-plugin-deps'
   COMPOSE_PROJECT_NAME: autogpt
   ELEVENLABS_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   ELEVENLABS_VOICE_1_ID: EXAVITQu4vr4xnSDxMaL

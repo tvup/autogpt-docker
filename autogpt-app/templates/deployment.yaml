@@ -180,7 +180,7 @@ spec:
       initContainers:
         - name: volume-mount-hack
           image: busybox
-          command: [ "sh", "-c", "chown -R 1000:1000 /app/auto_gpt_workspace" ]
+          command: [ "sh", "-c", "chown -R 1000:1000 /app/autogpt/auto_gpt_workspace" ]
           volumeMounts:
             - name: workspace
               mountPath: /app/autogpt/auto_gpt_workspace

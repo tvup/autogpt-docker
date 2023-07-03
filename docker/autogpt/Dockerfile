@@ -13,7 +13,7 @@ ADD https://github.com/sorenisanerd/gotty/releases/download/${GOTTY_VERSION}/got
 RUN tar -xzvf "gotty-$(uname -m).tar.gz"
 RUN apk update
 RUN apk add --no-cache git
-RUN git clone -b stable  https://github.com/tvup/Auto-GPT.git
+RUN git clone -b stable       https://github.com/tvup/Auto-GPT.git
 
 ##############################
 
@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install utilities
 RUN apt-get update && apt-get install -y \
-    curl jq wget git \
+    curl jq wget git nano unzip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
@@ -84,7 +84,7 @@ FROM autogpt-base as autogpt-dev
 RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 ONBUILD COPY . ./
-ONBUILD COPY ./Auto-GPT-Plugins.zip ./plugins/
+ONBUILD COPY ../../Auto-GPT-Plugins.zip ./plugins/
 ONBUILD RUN touch /.dockerenv
 
 # release build -> include bare minimum

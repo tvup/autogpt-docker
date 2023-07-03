@@ -205,4 +205,4 @@ spec:
           claimName: {{ include "autogpt-app.fullname" . }}-aisettings-claim
       - name: auto-gpt-json
         persistentVolumeClaim:
-          claimName: {{ include "autogpt-app.fullname" . }}-gpt-claim
+          claimName: {{ include "autogpt-app.fullname" . }}-autogptjson-claim

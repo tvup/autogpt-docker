@@ -83,6 +83,6 @@ persistentVolumeClaims:
 - name: aisettings
   size: 1Gi
   storageClassName: do-block-storage-retain
-- name: auto-gpt-json
+- name: autogptjson
   size: 1Gi
   storageClassName: do-block-storage-retain

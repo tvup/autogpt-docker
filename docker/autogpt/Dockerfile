@@ -84,6 +84,7 @@ FROM autogpt-base as autogpt-dev
 RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 ONBUILD COPY . ./
+ONBUILD COPY ./Auto-GPT-Plugins.zip ./plugins/
 ONBUILD RUN touch /.dockerenv
 
 # release build -> include bare minimum

@@ -4,3 +4,9 @@ AutoGPTSpacePlugin:
 AutoGPTApiTools:
   config: {}
   enabled: true
+api_tools:
+  config: {}
+  enabled: true
+astro:
+  config: {}
+  enabled: true

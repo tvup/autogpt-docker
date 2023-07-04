@@ -4,24 +4,9 @@
 
 replicaCount: 1
 
-secret:
-  pineconeApiKey: ""
-  openAIApiKey: ""
-  elevenlabsApiKey: "="
-  googleApiKey: ""
-  customSearchEngineId: ""
-  huggingfaceApiToken: ""
-  rapidApiKey: ""
-  uCookie: |
-    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    xxxxxxxxxxxx
-
 image:
   repository: registry.digitalocean.com/torben-it-registry/autogpt
-  tag: "v0.4.3-0.6"
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""

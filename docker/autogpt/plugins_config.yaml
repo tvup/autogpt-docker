@@ -4,3 +4,14 @@ AutoGPTSpacePlugin:
 AutoGPTApiTools:
   config: {}
   enabled: true
+AutoGPTNewsSearch:
+  config:
+    NEWSAPI_API_KEY: 11186dd477a7413da2ffdea5e61a85ad
+  enabled: true
+AutoGPTWolframAlphaSearch:
+   config:
+     WOLFRAMALPHA_APPID: Q8TPJK-LGPKQYJ7TA
+   enabled: true
+AutoGPTWikipediaSearch:
+   config: {}
+   enabled: true

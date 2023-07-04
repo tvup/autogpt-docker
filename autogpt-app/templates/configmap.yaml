@@ -3,29 +3,17 @@ apiVersion: v1
 metadata:
   name: {{ include "autogpt-app.fullname" . }}-configs
 data:
-  CHAT_HISTORY_FILE: /app/auto_gpt_workspace/chat_history.jsonl
   COMMAND_LINE_PARAMS: '--install-plugin-deps'
-  COMPOSE_PROJECT_NAME: autogpt
   ELEVENLABS_API_KEY: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  ELEVENLABS_VOICE_1_ID: EXAVITQu4vr4xnSDxMaL
-  ELEVENLABS_VOICE_2_ID: EXAVITQu4vr4xnSDxMaL
+  ELEVENLABS_VOICE_ID: xxxx
   EXECUTE_LOCAL_COMMANDS: 'True'
   FAST_LLM_MODEL: gpt-3.5-turbo
-  FORWARD_APP_PORT: '8080'
-  FORWARD_REDIS_PORT: '6379'
-  GID: '1000'
   IMAGE_PROVIDER: dalle
-  MEMORY_BACKEND: pinecone
-  OPENAI_AZURE_API_BASE: your-base-url-for-azure
-  OPENAI_AZURE_API_VERSION: api-version-for-azure
-  OPENAI_AZURE_DEPLOYMENT_ID: deployment-id-for-azure
-  PINECONE_ENV: asia-northeast1-gcp
+  MEMORY_BACKEND: json_file
   REDIS_HOST: redis-stack-server
   REDIS_PASSWORD: ''
   REDIS_PORT: '6379'
   RESTRICT_TO_WORKSPACE: 'False'
   SMART_LLM_MODEL: gpt-4
-  UID: '1000'
   USE_AZURE: 'False'
-  USE_MAC_OS_TTS: 'False'
   WIPE_REDIS_ON_START: 'False'

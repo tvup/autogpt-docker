@@ -13,7 +13,7 @@ ADD https://github.com/sorenisanerd/gotty/releases/download/${GOTTY_VERSION}/got
 RUN tar -xzvf "gotty-$(uname -m).tar.gz"
 RUN apk update
 RUN apk add --no-cache git
-RUN git clone -b stable        https://github.com/tvup/Auto-GPT.git
+RUN git clone -b stable https://github.com/tvup/Auto-GPT.git
 
 ##############################
 
@@ -24,6 +24,8 @@ COPY --chmod=+x --from=builder /build/gotty /bin/gotty
 WORKDIR /app
 
 COPY --from=builder /build/Auto-GPT/ /app
+
+RUN pip install --upgrade pip
 
 # Install browsers
 RUN apt-get update && apt-get install -y \
@@ -42,23 +44,16 @@ ENV PIP_NO_CACHE_DIR=yes \
 
 # Install the required python packages globally
 ENV PATH="$PATH:/root/.local/bin"
-ENV PINECONE_API_KEY=${PINECONE_API_KEY} \
-    PINECONE_ENV=${PINECONE_ENV} \
-    OPENAI_API_KEY=${OPENAI_API_KEY} \
+ENV OPENAI_API_KEY=${OPENAI_API_KEY} \
     ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY} \
-    ELEVENLABS_VOICE_1_ID=${ELEVENLABS_VOICE_1_ID} \
-    ELEVENLABS_VOICE_2_ID=${ELEVENLABS_VOICE_2_ID} \
+    ELEVENLABS_VOICE_ID=${ELEVENLABS_VOICE_ID} \
     SMART_LLM_MODEL=${SMART_LLM_MODEL} \
     FAST_LLM_MODEL=${FAST_LLM_MODEL} \
     GOOGLE_API_KEY=${GOOGLE_API_KEY} \
-    CUSTOM_SEARCH_ENGINE_ID=${CUSTOM_SEARCH_ENGINE_ID} \
+    GOOGLE_CUSTOM_SEARCH_ENGINE_ID=${GOOGLE_CUSTOM_SEARCH_ENGINE_ID} \
     USE_AZURE=${USE_AZURE} \
-    OPENAI_AZURE_API_BASE=${OPENAI_AZURE_API_BASE} \
-    OPENAI_AZURE_API_VERSION=${OPENAI_AZURE_API_VERSION} \
-    OPENAI_AZURE_DEPLOYMENT_ID=${OPENAI_AZURE_DEPLOYMENT_ID} \
     IMAGE_PROVIDER=${IMAGE_PROVIDER} \
     HUGGINGFACE_API_TOKEN=${HUGGINGFACE_API_TOKEN} \
-    USE_MAC_OS_TTS=${USE_MAC_OS_TTS} \
     MEMORY_BACKEND=${MEMORY_BACKEND} \
     REDIS_HOST=${REDIS_HOST} \
     REDIS_PORT=${REDIS_PORT} \
@@ -67,12 +62,7 @@ ENV PINECONE_API_KEY=${PINECONE_API_KEY} \
     EXECUTE_LOCAL_COMMANDS=${EXECUTE_LOCAL_COMMANDS} \
     COMMAND_LINE_PARAMS=${COMMAND_LINE_PARAMS} \
     GITHUB_API_KEY=${GITHUB_API_KEY} \
-    GITHUB_USERNAME=${GITHUB_USERNAME} \
-    TW_CONSUMER_KEY=${TW_CONSUMER_KEY} \
-    TW_CONSUMER_SECRET=${TW_CONSUMER_SECRET} \
-    TW_ACCESS_TOKEN=${TW_ACCESS_TOKEN} \
-    TW_ACCESS_TOKEN_SECRET=${TW_ACCESS_TOKEN_SECRET} \
-    TW_BEARER_TOKEN=${TW_BEARER_TOKEN}
+    GITHUB_USERNAME=${GITHUB_USERNAME}
 
 COPY requirements.txt .
 
@@ -85,6 +75,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 ONBUILD COPY requirements.txt ./
 ONBUILD COPY plugins_config.yaml ./
+ONBUILD COPY prompt_settings.yaml ./
 ONBUILD COPY Auto-GPT-Plugins.zip ./plugins/
 ONBUILD RUN touch /.dockerenv
 
@@ -102,6 +93,3 @@ ONBUILD RUN mkdir ./data
 ONBUILD RUN touch /.dockerenv
 
 FROM autogpt-${BUILD_TYPE} AS auto-gpt
-
-
-
